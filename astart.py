@@ -9,6 +9,7 @@ class Cell:
         self.g = float('inf')  # Cost from start to this cell
         self.h = 0  # Heuristic cost from this cell to destination
 
+# Class A*
 class AStart:
     def __init__(self, map, movedir=4):
         self.map = map
@@ -47,7 +48,7 @@ class AStart:
 
             # For each direction, check the successors
             directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-            for dir in directions[:self.movedir]:
+            for dir in directions[:self.movedir]: # Di chuyển theo 4 hướng hoặc 8 hướng
                 new_x = x + dir[0]
                 new_y = y + dir[1]
 
@@ -64,8 +65,8 @@ class AStart:
                     else:
                         # Calculate the new f, g, and h values
                         g_new = self.cellinfo[y][x].g + 1.0
-                        if self.movedir == 8: h_new = self.map.CalculateH(new_x, new_y, 'euclide')
-                        elif self.movedir == 4: h_new = self.map.CalculateH(new_x, new_y, 'manhattan')
+                        if self.movedir == 8: h_new = self.map.CalculateH(new_x, new_y, 'euclide') # Dùng euclid cho di chuyển 8 hướng
+                        elif self.movedir == 4: h_new = self.map.CalculateH(new_x, new_y, 'manhattan') # Dùng manhattan cho di chuyển 4 hướng
                         f_new = g_new + h_new
 
                         # If the cell is not in the open list or the new f value is smaller
