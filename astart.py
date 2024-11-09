@@ -7,7 +7,8 @@ class AStart:
     def Search(self):
         # Initialize the closed list (visited cells)
         closed_list = [[False for _ in range(self.map.width)] for _ in range(self.map.height)]
-
+        movedir = 8
+        
         # Initialize the start cell details
         x = int(self.map.src_point[0])
         y = int(self.map.src_point[1])
@@ -36,7 +37,7 @@ class AStart:
 
             # For each direction, check the successors
             directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-            for dir in directions:
+            for dir in directions[:movedir]:
                 new_x = x + dir[0]
                 new_y = y + dir[1]
 
