@@ -1,5 +1,14 @@
 import random
 import numpy as np
+
+class Cell:
+    def __init__(self):
+        self.parent_x = 0  # Parent cell's row index
+        self.parent_y = 0  # Parent cell's column index
+        self.f = float('inf')  # Total cost of the cell (g + h)
+        self.g = float('inf')  # Cost from start to this cell
+        self.h = 0  # Heuristic cost from this cell to destination
+        
 class Map:
     def __init__(self, width, height, src_point=(0,0), des_point=(0,0)):
         self.width = width
