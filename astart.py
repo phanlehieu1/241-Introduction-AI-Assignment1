@@ -1,13 +1,23 @@
 import heapq
+
+# Class cell để lưu lại các thông số của từng ô
+class Cell:
+    def __init__(self):
+        self.parent_x = 0  # Parent cell's row index
+        self.parent_y = 0  # Parent cell's column index
+        self.f = float('inf')  # Total cost of the cell (g + h)
+        self.g = float('inf')  # Cost from start to this cell
+        self.h = 0  # Heuristic cost from this cell to destination
+
 class AStart:
-    def __init__(self, map):
+    def __init__(self, map, movedir=4):
         self.map = map
-        self.cellinfo = map.cellinfo
+        self.cellinfo = [[Cell() for _ in range(map.width)] for _ in range(map.height)] # Tạo ma trận object cell lưu thông tin từng ô
+        self.movedir = movedir
 
     def Search(self):
         # Initialize the closed list (visited cells)
         closed_list = [[False for _ in range(self.map.width)] for _ in range(self.map.height)]
-        movedir = 8
         
         # Initialize the start cell details
         x = int(self.map.src_point[0])
@@ -37,7 +47,7 @@ class AStart:
 
             # For each direction, check the successors
             directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-            for dir in directions[:movedir]:
+            for dir in directions[:self.movedir]:
                 new_x = x + dir[0]
                 new_y = y + dir[1]
 
@@ -54,8 +64,8 @@ class AStart:
                     else:
                         # Calculate the new f, g, and h values
                         g_new = self.cellinfo[y][x].g + 1.0
-                        h_new = self.map.CalculateH(new_x, new_y, 'euclide')
-                        #h_new = self.map.CalculateH(new_x, new_y, 'manhattan')
+                        if self.movedir == 8: h_new = self.map.CalculateH(new_x, new_y, 'euclide')
+                        elif self.movedir == 4: h_new = self.map.CalculateH(new_x, new_y, 'manhattan')
                         f_new = g_new + h_new
 
                         # If the cell is not in the open list or the new f value is smaller
