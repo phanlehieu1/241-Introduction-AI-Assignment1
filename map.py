@@ -19,6 +19,61 @@ class Map:
         else: self.CreateSrcDes()
         self.grid[self.src_point[1]][self.src_point[0]] = 2
         self.grid[self.des_point[1]][self.des_point[0]] = 3
+    
+    def load_from_file(self, filename):
+        """Đọc bản đồ từ file txt
+        Format file:
+        - Dòng đầu tiên chứa 2 số: chiều rộng (width) và chiều cao (height)
+        - Các dòng tiếp theo là ma trận bản đồ với:
+            0: lối đi
+            1: tường
+            2: điểm bắt đầu
+            3: điểm đích
+        """
+        try:
+            with open(filename, 'r') as f:
+                # Đọc kích thước bản đồ
+                self.width, self.height = map(int, f.readline().split())
+
+                # Khởi tạo grid rỗng
+                self.grid = []
+
+                # Đọc từng dòng của bản đồ
+                for _ in range(self.height):
+                    row = list(map(int, f.readline().split()))
+                    if len(row) != self.width:
+                        raise ValueError("Chiều rộng của map không khớp")
+                    self.grid.append(row)
+
+                # Tìm điểm bắt đầu và điểm đích
+                self.src_point = None
+                self.des_point = None
+
+                for y in range(self.height):
+                    for x in range(self.width):
+                        if self.grid[y][x] == 2:
+                            if self.src_point is not None:
+                                raise ValueError(
+                                    "Có nhiều hơn một điểm bắt đầu")
+                            self.src_point = (x, y)
+                        elif self.grid[y][x] == 3:
+                            if self.des_point is not None:
+                                raise ValueError("Có nhiều hơn một điểm đích")
+                            self.des_point = (x, y)
+
+                if self.src_point is None:
+                    raise ValueError("Không tìm thấy điểm bắt đầu")
+                if self.des_point is None:
+                    raise ValueError("Không tìm thấy điểm đích")
+
+                return True
+
+        except FileNotFoundError:
+            print(f"Không tìm thấy file {filename}")
+            return False
+        except Exception as e:
+            print(f"Lỗi khi đọc file: {str(e)}")
+            return False
 
     def CreateSrcDes(self):
         self.src_point = (random.randint(0, self.width-1), 0)
